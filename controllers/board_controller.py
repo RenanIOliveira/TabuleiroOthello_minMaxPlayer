@@ -11,18 +11,16 @@ class BoardController:
     self.view  = ConsoleBoardView(self.board)
 
   def init_game(self):
-
-
     self.white_player = self._select_player(Board.WHITE)
     self.black_player = self._select_player(Board.BLACK)
 
     self.atual_player = self.black_player
 
-    finish_game = 0
+    number_of_players_without_moves = 0
 
     self.view.update_view()
 
-    while finish_game != 2:
+    while number_of_players_without_moves != 2:
       raw_input("")
       atual_color = self.atual_player.color
       print 'Jogador: ' + atual_color
@@ -30,11 +28,10 @@ class BoardController:
       if self.board.valid_moves(atual_color).__len__() > 0:
         self.board.play(self.atual_player.play(self.board.get_clone()), atual_color)
         self.view.update_view()
-        finish_game = 0
-      
+        number_of_players_without_moves = 0
       else:
         print 'Sem movimentos para o jogador: ' + atual_color
-        finish_game += 1
+        number_of_players_without_moves += 1
       self.atual_player = self._opponent(self.atual_player)
 
     self._end_game()
