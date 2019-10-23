@@ -26,10 +26,12 @@ class BoardController:
       raw_input("")
       atual_color = self.atual_player.color
       print 'Jogador: ' + atual_color
+
       if self.board.valid_moves(atual_color).__len__() > 0:
         self.board.play(self.atual_player.play(self.board.get_clone()), atual_color)
         self.view.update_view()
         finish_game = 0
+      
       else:
         print 'Sem movimentos para o jogador: ' + atual_color
         finish_game += 1
@@ -49,6 +51,19 @@ class BoardController:
     else:
       print ""
       print 'Jogo terminou empatado'
+  
+  def _select_player(self, color):
+    players = glob.glob('./models/players/*_player.py')
+    print 'Selecione um dos players abaixo para ser o jogador '+ color
+
+    for index, player in enumerate(players):
+      print index.__str__() + " - " + player
+
+    player = raw_input("Digite o numero do player que voce deseja: ")
+    module_globals = {}
+    execfile(players[int(player)], module_globals)
+    print module_globals.keys()
+    return module_globals[module_globals.keys()[len(module_globals.keys()) - 1]](color)
 
   def _opponent(self, player):
     if player.color == Board.WHITE:
@@ -56,15 +71,3 @@ class BoardController:
 
     return self.white_player
 
-  def _select_player(self, color):
-    players = glob.glob('./models/players/*_player.py')
-    print 'Selecione um dos players abaixo para ser o jogador '+color
-
-    for idx, player in enumerate(players):
-      print idx.__str__() + " - " + player
-
-    player = raw_input("Digite o numero do player que voce deseja: ")
-    module_globals = {}
-    execfile(players[int(player)], module_globals)
-    print module_globals.keys()
-    return module_globals[module_globals.keys()[len(module_globals.keys()) - 1]](color)
