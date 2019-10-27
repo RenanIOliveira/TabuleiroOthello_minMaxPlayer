@@ -8,11 +8,10 @@ MAXIMUM_SEARCH_DEPTH = 3
 
 
 def calculatePlay(Board, mypieces):
-    move = minMax(Board, 0, MAXIMUM_SEARCH_DEPTH, True, mypieces)
+    move = minMax(Board, 0, MAXIMUM_SEARCH_DEPTH, True, mypieces, -INF, INF)
     return move
 
-
-def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces):
+def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
     whiteMoves = Board.valid_moves(Board.WHITE)
     blackMoves = Board.valid_moves(Board.BLACK)
     numberOfWhiteMoves = whiteMoves.__len__()
@@ -39,7 +38,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces):
 
         # if there are no plays pass the turn
         if(moves.__len__() == 0):
-            return minMax(Board, current_depth+1, max_depth, not IsMaxNode, myPieces)
+            return minMax(Board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta)
 
         # calculate the best move
         maximum = -INF
@@ -48,10 +47,13 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces):
             new_board = copy.deepcopy(Board)
             new_board.play(move, Board.WHITE)
             current_child_value = minMax(
-                new_board, current_depth+1, max_depth, not IsMaxNode, myPieces)
+                new_board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta)
             if(maximum <= current_child_value):
                 maximum = current_child_value
                 best_move = move
+            alpha = max(alpha, maximum)
+            if(alpha >= beta):
+                break
         if(current_depth != 0):
             return maximum
         else:
@@ -65,20 +67,23 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces):
 
         # if there are no plays pass the turn
         if(moves.__len__() == 0):
-            return minMax(Board, current_depth+1, max_depth, not IsMaxNode, myPieces)
+            return minMax(Board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta)
 
         # calculate the best move
-        min = INF
+        minimum = INF
         for move in moves:
             new_board = copy.deepcopy(Board)
             new_board.play(move, Board.BLACK)
             current_child_value = minMax(
-                new_board, current_depth+1, max_depth, not IsMaxNode, myPieces)
-            if(current_child_value <= min):
-                min = current_child_value
+                new_board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta)
+            if(current_child_value <= minimum):
+                minimum = current_child_value
                 best_move = move
+            beta = min(beta,minimum)
+            if(alpha >= beta):
+                break
         if(current_depth != 0):
-            return min
+            return minimum
         else:
             return best_move
 
