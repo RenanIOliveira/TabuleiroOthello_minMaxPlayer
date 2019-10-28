@@ -1,5 +1,3 @@
-
-
 def piecesDiference(board, myPieces):
     [white, black] = board.score()
     if(myPieces == board.WHITE):

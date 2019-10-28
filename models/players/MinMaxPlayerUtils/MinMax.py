@@ -2,16 +2,18 @@ from models.players.MinMaxPlayerUtils.Board_evaluator import evaluateBoard
 from models.board import Board
 import models.players.MinMaxPlayerUtils.heuristics as heuristics
 import copy
+import datetime
 
 INF = 0x3f3f3f3f
 MAXIMUM_SEARCH_DEPTH = 3
-
+MIN_TIME = datetime.datetime.now()
 
 def calculatePlay(Board, mypieces):
-    move = minMax(Board, 0, MAXIMUM_SEARCH_DEPTH, True, mypieces, -INF, INF)
+    MIN_TIME = datetime.datetime.now()
+    move = minMax(Board, 0, MAXIMUM_SEARCH_DEPTH, True, mypieces, -INF, INF, MIN_TIME)
     return move
 
-def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
+def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta, initial_time):
     whiteMoves = Board.valid_moves(Board.WHITE)
     blackMoves = Board.valid_moves(Board.BLACK)
     numberOfWhiteMoves = whiteMoves.__len__()
@@ -27,7 +29,13 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
             return -INF
 
     if(current_depth == max_depth):
-        return evaluateBoard(Board, myPieces, [heuristics.piecesDiference])
+        current_time = datetime.datetime.now()
+        step_time_difference = current_time - initial_time
+        time_difference = current_time - MIN_TIME
+        if ((time_difference + step_time_difference).total_seconds() >= 3):
+            return evaluateBoard(Board, myPieces, [heuristics.piecesDiference])
+        else:
+            return minMax(Board, 0, max_depth+1, IsMaxNode, myPieces, alpha, beta, datetime.datetime.now())
 
     if(IsMaxNode):
         # if is maxnode myPieces plays
@@ -38,7 +46,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
 
         # if there are no plays pass the turn
         if(moves.__len__() == 0):
-            return minMax(Board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta)
+            return minMax(Board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta, datetime.datetime.now())
 
         # calculate the best move
         maximum = -INF
@@ -47,7 +55,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
             new_board = copy.deepcopy(Board)
             new_board.play(move, Board.WHITE)
             current_child_value = minMax(
-                new_board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta)
+                new_board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta, datetime.datetime.now())
             if(maximum <= current_child_value):
                 maximum = current_child_value
                 best_move = move
@@ -67,7 +75,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
 
         # if there are no plays pass the turn
         if(moves.__len__() == 0):
-            return minMax(Board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta)
+            return minMax(Board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta, datetime.datetime.now())
 
         # calculate the best move
         minimum = INF
@@ -75,7 +83,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
             new_board = copy.deepcopy(Board)
             new_board.play(move, Board.BLACK)
             current_child_value = minMax(
-                new_board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta)
+                new_board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta, datetime.datetime.now())
             if(current_child_value <= minimum):
                 minimum = current_child_value
                 best_move = move
