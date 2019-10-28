@@ -9,8 +9,10 @@ MAXIMUM_SEARCH_DEPTH = 3
 MIN_TIME = datetime.datetime.now()
 
 def calculatePlay(Board, mypieces):
+    global MIN_TIME
     MIN_TIME = datetime.datetime.now()
     move = minMax(Board, 0, MAXIMUM_SEARCH_DEPTH, True, mypieces, -INF, INF, MIN_TIME)
+    print datetime.datetime.now() - MIN_TIME
     return move
 
 def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta, initial_time):
@@ -35,7 +37,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta, in
         if ((time_difference + step_time_difference).total_seconds() >= 3):
             return evaluateBoard(Board, myPieces, [heuristics.piecesDiference])
         else:
-            return minMax(Board, 0, max_depth+1, IsMaxNode, myPieces, alpha, beta, datetime.datetime.now())
+            return minMax(Board, current_depth, max_depth+1, IsMaxNode, myPieces, alpha, beta, datetime.datetime.now())
 
     if(IsMaxNode):
         # if is maxnode myPieces plays
