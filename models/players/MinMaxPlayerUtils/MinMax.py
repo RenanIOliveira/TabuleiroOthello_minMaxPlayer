@@ -5,7 +5,7 @@ import copy
 import time
 
 INF = 0x3f3f3f3f
-INITIAL_SEARCH_DEPTH = 3
+INITIAL_SEARCH_DEPTH = 2
 INITIAL_TIME = None
 MAX_TIME = 3
 
@@ -37,6 +37,7 @@ def iterativeDepeningMinMax(initial_depth, Board, mypieces):
 
 
 def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
+
     whiteMoves = Board.valid_moves(Board.WHITE)
     blackMoves = Board.valid_moves(Board.BLACK)
     numberOfWhiteMoves = whiteMoves.__len__()
@@ -70,7 +71,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
 
         # if there are no plays pass the turn
         if(moves.__len__() == 0):
-            return minMax(Board, current_depth, max_depth, not IsMaxNode, myPieces, alpha, beta)
+            return minMax(Board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta)
 
         # calculate the best move
         maximum = -INF
@@ -78,7 +79,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
 
         for move in moves:
             new_board = copy.deepcopy(Board)
-            new_board.play(move, Board.WHITE)
+            new_board.play(move, myPieces)
             current_child_value = minMax(
                 new_board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta)
             if(current_child_value is None):
@@ -93,19 +94,21 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
         if(current_depth != 0):
             return maximum
         else:
-            print("best move evaluation: ", maximum,
-                  " move: ", (best_move.x, best_move.y))
+            # print("best move evaluation: ", maximum,
+                #   " move: ", (best_move.x, best_move.y))
             return best_move
     else:
         # in this case the other player pieces plays
         if(myPieces == Board.WHITE):
+            theirPieces = Board.BLACK
             moves = blackMoves
         else:
+            theirPieces = Board.WHITE
             moves = whiteMoves
 
         # if there are no plays pass the turn
         if(moves.__len__() == 0):
-            return minMax(Board, current_depth, max_depth, not IsMaxNode, myPieces, alpha, beta)
+            return minMax(Board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta)
 
         # calculate the best move
         minimum = INF
@@ -113,7 +116,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
 
         for move in moves:
             new_board = copy.deepcopy(Board)
-            new_board.play(move, Board.BLACK)
+            new_board.play(move, theirPieces)
 
             current_child_value = minMax(
                 new_board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta)
