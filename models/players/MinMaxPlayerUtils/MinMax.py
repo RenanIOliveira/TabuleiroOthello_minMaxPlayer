@@ -12,7 +12,7 @@ MAX_TIME = 3
 final_board_state_heuristic = [heuristics.piecesDiference]
 game_heuristics = [heuristics.cornersHeuristic,
                    heuristics.stability, heuristics.mobility]
-game_weights = [1000, 1, 100]
+game_weights = [1000, 100, 10]
 
 
 def calculatePlay(Board, mypieces):
@@ -43,7 +43,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
     numberOfWhiteMoves = whiteMoves.__len__()
     numberOfBlackMoves = blackMoves.__len__()
 
-    if(time.time()-INITIAL_TIME + 0.012 > MAX_TIME):
+    if(time.time()-INITIAL_TIME + 0.02 > MAX_TIME):
         return None
 
     # if end game
@@ -75,7 +75,6 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
 
         # calculate the best move
         maximum = -INF
-        best_move = moves[0]
 
         for move in moves:
             new_board = copy.deepcopy(Board)
@@ -95,7 +94,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
             return maximum
         else:
             # print("best move evaluation: ", maximum,
-                #   " move: ", (best_move.x, best_move.y))
+            #   " move: ", (best_move.x, best_move.y))
             return best_move
     else:
         # in this case the other player pieces plays
@@ -112,7 +111,6 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
 
         # calculate the best move
         minimum = INF
-        best_move = moves[0]
 
         for move in moves:
             new_board = copy.deepcopy(Board)
