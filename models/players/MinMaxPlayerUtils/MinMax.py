@@ -74,7 +74,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
             return minMax(Board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta)
 
         # calculate the best move
-        maximum = -INF
+        maximum = -INF*2
 
         for move in moves:
             new_board = copy.deepcopy(Board)
@@ -110,7 +110,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
             return minMax(Board, current_depth+1, max_depth, not IsMaxNode, myPieces, alpha, beta)
 
         # calculate the best move
-        minimum = INF
+        minimum = INF*2
 
         for move in moves:
             new_board = copy.deepcopy(Board)
