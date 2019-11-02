@@ -17,7 +17,6 @@ def evaluateBoardWithoutWeights(board, myPieces, heuristics_list):
 
 
 def evaluateBoardWithWeights(board, myPieces, heuristics_list, weights):
-
     if len(heuristics_list) != len(weights):
         raise Exception('heuristics_list and weights_list have diferent sizes')
     board_value = 0
