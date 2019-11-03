@@ -5,7 +5,7 @@ import copy
 import time
 
 INF = 0x3f3f3f3f
-INITIAL_SEARCH_DEPTH = 2
+INITIAL_SEARCH_DEPTH = 3
 INITIAL_TIME = None
 MAX_TIME = 3
 
@@ -16,8 +16,8 @@ game_weights = [1000, 100, 10]
 
 
 def calculatePlay(Board, mypieces):
-    INITIAL_TIME = time.time()
     global INITIAL_TIME
+    INITIAL_TIME = time.time()
     move = iterativeDepeningMinMax(INITIAL_SEARCH_DEPTH, Board, mypieces)
     print "search time: ", time.time() - INITIAL_TIME
     return move
@@ -89,7 +89,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
             if(maximum <= current_child_value):
                 maximum = current_child_value
                 best_move = move
-            
+
             alpha = max(alpha, maximum)
             if (alpha >= beta):
                 break
@@ -131,7 +131,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
             if(current_child_value <= minimum):
                 minimum = current_child_value
                 best_move = move
-            
+
             beta = min(beta, minimum)
             if(alpha >= beta):
                 break
@@ -141,31 +141,35 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
         else:
             return best_move
 
+
 def orderMovesMax(moves):
-    orderedMoves = sorted(moves,key=lambda x: minDistCorner(x))
+    orderedMoves = sorted(moves, key=lambda x: minDistCorner(x))
     # print "--------"
     # for move in ordered:
     #     print move, minDistCorner(move)
     # print "--------"
     return orderedMoves
 
+
 def orderMovesMin(moves):
-    orderedMoves = sorted(moves,key=lambda x: minDistCorner(x),reverse=True)
+    orderedMoves = sorted(moves, key=lambda x: minDistCorner(x), reverse=True)
     return orderedMoves
+
 
 def minDistCorner(move):
 
     import math
-    corners = [[1,1],[1,8], [8,1], [8,8]]
+    corners = [[1, 1], [1, 8], [8, 1], [8, 8]]
     minDist = 10
     for corner in corners:
         distX = abs(corner[0] - move.x)
         distY = abs(corner[1] - move.y)
-        dist  = math.sqrt(distX*distX + distY*distY)
+        dist = math.sqrt(distX*distX + distY*distY)
     if dist < minDist:
         minDist = dist
 
     return minDist
+
 
 def main():
     print calculatePlay(Board(None), Board.BLACK)
