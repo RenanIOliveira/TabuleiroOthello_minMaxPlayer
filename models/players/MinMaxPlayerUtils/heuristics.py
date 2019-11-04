@@ -1,4 +1,3 @@
-import math
 
 
 def piecesDiference(board, myPieces):
@@ -90,10 +89,23 @@ def countAndResetStables():
     return total
 
 
+in_queue = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ]
+
+
 def setStables(board, myPieces, x, y):
     global stable_pieces
+    global in_queue
     q = queue()
-    myset = {str(x) + str(y)}
+    in_queue[x][y] = 1
     q.enqueue([x, y])
 
     if (stable_pieces[x][y] == 1):
@@ -103,22 +115,22 @@ def setStables(board, myPieces, x, y):
         position = q.dequeue()
         x = position[0]
         y = position[1]
-        myset.remove(str(x)+str(y))
+        in_queue[x][y] = 0
         if checkNeighborsStablity(x, y) and board.get_square_color(x, y) == myPieces:
             stable_pieces[x][y] = 1
 
-            if(stable_pieces[x][y+1] == 0 and str(x)+str(y+1) not in myset):
+            if(stable_pieces[x][y+1] == 0 and in_queue[x][y] == 0):
                 q.enqueue([x, y+1])
-                myset.add(str(x) + str(y+1))
-            if(stable_pieces[x][y-1] == 0)and str(x)+str(y-1) not in myset:
+                in_queue[x][y+1] = 1
+            if stable_pieces[x][y-1] == 0 and in_queue[x][y] == 0:
                 q.enqueue([x, y-1])
-                myset.add(str(x) + str(y-1))
-            if(stable_pieces[x+1][y] == 0)and str(x+1)+str(y) not in myset:
+                in_queue[x][y-1] = 1
+            if(stable_pieces[x+1][y] == 0)and in_queue[x+1][y] == 0:
                 q.enqueue([x+1, y])
-                myset.add(str(x+1) + str(y))
-            if(stable_pieces[x-1][y] == 0)and str(x-1)+str(y) not in myset:
+                in_queue[x+1][y] = 1
+            if(stable_pieces[x-1][y] == 0)and in_queue[x-1][y] == 0:
                 q.enqueue([x-1, y])
-                myset.add(str(x-1) + str(y))
+                in_queue[x-1][y] = 1
 
 
 def checkNeighborsStablity(x, y):
@@ -144,6 +156,33 @@ def checkNeighborsStablity(x, y):
         return True
 
     return False
+
+
+def board_weights(board, myPieces):
+    if(myPieces == board.WHITE):
+        theirPieces = board.BLACK
+    else:
+        theirPieces = board.WHITE
+
+    s_weigths = [[0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 200, -100, 100,  50,  50, 100, -100,  200],
+                 [0, - 100, -200, -50, -50, -50, -50, -200, -100],
+                 [0, 100,  -50, 100,   0,   0, 100,  -50,  100],
+                 [0,  50,  -50,   0,   0,   0,   0,  -50,   50],
+                 [0,  50,  -50,   0,   0,   0,   0,  -50,   50],
+                 [0, 100,  -50, 100,   0,   0, 100,  -50,  100],
+                 [0, -100, -200, -50, -50, -50, -50, -200, -100],
+                 [0, 200, -100, 100,  50,  50, 100, -100,  200]]
+
+    total = 0
+    for i in range(1, 9):
+        for j in range(1, 9):
+            thisColor = board.get_square_color(i, j)
+            if(thisColor == myPieces):
+                total += s_weigths[i][j]
+            elif(thisColor == theirPieces):
+                total += s_weigths[i][j]
+    return total
 
 
 class queue:
