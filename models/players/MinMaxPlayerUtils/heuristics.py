@@ -185,6 +185,16 @@ def board_weights(board, myPieces):
     return total
 
 
+def my_parity(board, myPieces):
+    [whiteScore, blackScore] = board.score()
+    squaresRemaining = 64 - (whiteScore + blackScore)
+
+    if (squaresRemaining % 2 == 0):
+        return -1
+    else:
+        return 1
+
+
 class queue:
     content = []
 

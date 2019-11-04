@@ -10,13 +10,32 @@ INITIAL_TIME = None
 MAX_TIME = 3
 
 final_board_state_heuristic = [heuristics.piecesDiference]
+
 game_heuristics = [heuristics.cornersHeuristic,
-                   heuristics.stability, heuristics.mobility]
-game_weights = [1000, 100, 10]
+                   heuristics.stability, heuristics.mobility,
+                   heuristics.board_weights, heuristics.my_parity]
+
+game_weights = [20000, 20000, 10, 200, 0]
+
+mid_game_weights = [20000, 30000, 5, 100, 100]
+
+end_game_weights = [20000, 30000, 0, 50, 200]
+
+
+def n_plays(board):
+    [whiteScore, blackScore] = board.score()
+    return (whiteScore + blackScore)
 
 
 def calculatePlay(Board, mypieces):
-    global INITIAL_TIME
+    global INITIAL_TIME, game_weights
+    plays = n_plays(Board)
+
+    if(plays > 30 and plays < 51):
+        game_weights = mid_game_weights
+    if(plays > 50):
+        game_weights = end_game_weights
+
     INITIAL_TIME = time.time()
     move = iterativeDepeningMinMax(INITIAL_SEARCH_DEPTH, Board, mypieces)
     print "search time: ", time.time() - INITIAL_TIME
@@ -54,9 +73,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
         if(pieces_diference > 0):
             return INF+pieces_diference
         # if we lose or draw
-        if(pieces_diference < 0):
-            return -INF+pieces_diference
-        if(pieces_diference == 0):
+        if(pieces_diference <= 0):
             return -INF+pieces_diference
 
     if(current_depth == max_depth):

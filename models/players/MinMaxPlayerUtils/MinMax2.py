@@ -12,8 +12,8 @@ MAX_TIME = 3
 final_board_state_heuristic = [heuristics.piecesDiference]
 game_heuristics = [heuristics.cornersHeuristic,
                    heuristics.stability, heuristics.mobility,
-                   heuristics.board_weights]
-game_weights = [10000, 10000, 5, 20]
+                   heuristics.board_weights, heuristics.my_parity]
+game_weights = [10000, 10000, 5, 20, 10]
 
 
 def calculatePlay(Board, mypieces):
@@ -55,9 +55,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
         if(pieces_diference > 0):
             return INF+pieces_diference
         # if we lose or draw
-        if(pieces_diference < 0):
-            return -INF+pieces_diference
-        if(pieces_diference == 0):
+        if(pieces_diference <= 0):
             return -INF+pieces_diference
 
     if(current_depth == max_depth):
