@@ -20,7 +20,6 @@ def calculatePlay(Board, mypieces):
     global INITIAL_TIME
     INITIAL_TIME = time.time()
     move = iterativeDepeningMinMax(INITIAL_SEARCH_DEPTH, Board, mypieces)
-    print "search time: ", time.time() - INITIAL_TIME
     return move
 
 
