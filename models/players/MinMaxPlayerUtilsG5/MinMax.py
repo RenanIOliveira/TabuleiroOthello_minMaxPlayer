@@ -5,7 +5,7 @@ import copy
 import time
 
 INF = 0x3f3f3f3f
-INITIAL_SEARCH_DEPTH = 3
+INITIAL_SEARCH_DEPTH = 2
 INITIAL_TIME = None
 MAX_TIME = 3
 
