@@ -1,7 +1,7 @@
-import models.players.MinMaxPlayerUtils.MinMax as MinMax
+import models.players.MinMaxPlayerUtilsG5.MinMax2 as MinMax
 
 
-class MinMaxPlayer:
+class G5Player2:
     def __init__(self, color):
         self.color = color
 

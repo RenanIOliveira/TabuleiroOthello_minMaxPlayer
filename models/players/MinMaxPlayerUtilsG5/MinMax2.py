@@ -1,6 +1,6 @@
-from models.players.MinMaxPlayerUtils.Board_evaluator import evaluateBoard
+from models.players.MinMaxPlayerUtilsG5.Board_evaluator import evaluateBoard
 from models.board import Board
-import models.players.MinMaxPlayerUtils.heuristics as heuristics
+import models.players.MinMaxPlayerUtilsG5.heuristics as heuristics
 import copy
 import time
 
@@ -13,7 +13,7 @@ final_board_state_heuristic = [heuristics.piecesDiference]
 game_heuristics = [heuristics.cornersHeuristic,
                    heuristics.stability, heuristics.mobility,
                    heuristics.board_weights, heuristics.my_parity]
-game_weights = [10000, 10000, 5, 20, 10]
+game_weights = [20000, 20000, 10, 40, 20]
 
 
 def calculatePlay(Board, mypieces):
@@ -26,14 +26,11 @@ def calculatePlay(Board, mypieces):
 
 def iterativeDepeningMinMax(initial_depth, Board, mypieces):
     best_move = None
-    max_depth = 0
     for depth in range(INITIAL_SEARCH_DEPTH, 15):
         move = minMax(Board, 0, depth,
                       True, mypieces, -INF, INF)
         if move is not None:
-            max_depth = depth
             best_move = move
-    print "search depth: ", max_depth
     return best_move
 
 
@@ -44,7 +41,7 @@ def minMax(Board, current_depth, max_depth, IsMaxNode, myPieces, alpha, beta):
     numberOfWhiteMoves = whiteMoves.__len__()
     numberOfBlackMoves = blackMoves.__len__()
 
-    if(time.time()-INITIAL_TIME + 0.02 > MAX_TIME):
+    if(time.time()-INITIAL_TIME + 0.04 > MAX_TIME):
         return None
 
     # if end game
