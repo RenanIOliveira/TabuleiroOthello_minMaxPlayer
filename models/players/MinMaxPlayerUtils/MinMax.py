@@ -17,9 +17,9 @@ game_heuristics = [heuristics.cornersHeuristic,
 
 game_weights = [20000, 20000, 10, 200, 0]
 
-mid_game_weights = [20000, 30000, 5, 100, 100]
+mid_game_weights = [20000, 30000, 5, 100, 50]
 
-end_game_weights = [20000, 30000, 0, 50, 200]
+end_game_weights = [20000, 30000, 0, 40, 100]
 
 
 def n_plays(board):
